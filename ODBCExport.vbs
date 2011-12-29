@@ -8,9 +8,9 @@ Dim objShell
 Dim ret
 
 'バージョンチェック
-If (GetOSVersion() <=5.0) Then
-	'W2K以下
-	msgbox("WindowsXP以降でないと動きません。残念")
+If (GetOSVersion() <5.0) Then
+	'W2K未満
+	msgbox("Windows2000以降でないと動きません。残念")
 	WScript.Quit
 End If
 
@@ -37,9 +37,13 @@ ret = objShell.Popup( _
  Select Case ret
    Case vbOK
 	'エクスポート
-		objShell.Run "reg export HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBC.INI """ & CurrentDir & "\ODBC.reg"""
-		objShell.Popup "ODBC.regファイルにエクスポートしました。" & vbCrlf & _
-					   "移行先にコピーして、ダブルクリックしてください。", ,, vbInformation
+		If (GetOSVersion() = 5.0) Then
+			objShell.Run "regedit /e """ & CurrentDir & "\ODBC.reg""" & " HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBC.INI"
+		Else
+			objShell.Run "reg export HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBC.INI """ & CurrentDir & "\ODBC.reg"""
+		End If
+			objShell.Popup "ODBC.regファイルにエクスポートしました。" & vbCrlf & _
+						   "移行先にコピーして、ダブルクリックしてください。", ,, vbInformation
    Case vbCancel
      objShell.Popup "キャンセルしました。", ,, vbInformation
   End Select
