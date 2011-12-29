@@ -18,6 +18,17 @@ End If
 Set objShell = WScript.CreateObject("WScript.Shell")
 CurrentDir = objShell.CurrentDirectory
 
+'警告
+ret = objShell.Popup( _
+	"！警告！" & vbCrlf & "本ツールはレジストリを操作します。" & vbCrlf & _
+	"使用に際しては、レジストリのバックアップを行うなど、" & vbCrlf & _
+	"使用者の自己責任下で行ってください。", _
+	0, "処理を実行しますか？", vbOKCancel+vbCritical)
+If (ret = vbCancel) Then
+	objShell.Popup "キャンセルしました。", ,, vbInformation
+	Set objShell = Nothing
+	WScript.Quit
+End If
 ret = objShell.Popup( _
    "ODBCの設定をカレントディレクトリにエクスポートします。" & vbCrlf & _
    "中止する場合は「キャンセル」を押してください。", _
